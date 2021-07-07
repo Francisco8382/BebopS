@@ -37,10 +37,10 @@
     <arg name="Dif_Tiempo" default="0.01"/>
     <arg name="X_Inicial" default="0.0"/>
     <arg name="Y_Inicial" default="0.0"/>
-    <arg name="Z_Inicial" default="10.0"/>
-    <arg name="X_Distancia" default="10.0"/>
-    <arg name="Y_Distancia" default="5.0"/>
-    <arg name="Z_Distancia" default="5.0"/>
+    <arg name="Z_Inicial" default="2.0"/>
+    <arg name="X_Distancia" default="2.0"/>
+    <arg name="Y_Distancia" default="1.0"/>
+    <arg name="Z_Distancia" default="1.0"/>
     <arg name="verbose" default="false"/>
 
   <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find bebop_simulator)/models"/>

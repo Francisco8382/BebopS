@@ -32,15 +32,20 @@
     <arg name="path" default="$(env HOME)/CSV/"/>
     <param name="Subcarpeta" type="str" command="date +'%d-%m-%Y_%Ih%Mm%Ss'"/>
 
+    <arg name="Gamma" default="0.1"/>
+    <arg name="TiempoMargen" default="10.0"/>
+    <arg name="path" default="$(env HOME)/CSV/"/>
+    <param name="Subcarpeta" type="str" command="date +'%d-%m-%Y_%Ih%Mm%Ss'"/>
+
     <arg name="TiempoPosicionInicial" default="20.0"/>
     <arg name="TiempoTrayectoria" default="40.0"/>
     <arg name="Dif_Tiempo" default="0.01"/>
     <arg name="X_Inicial" default="0.0"/>
     <arg name="Y_Inicial" default="0.0"/>
-    <arg name="Z_Inicial" default="1.0"/>
-    <arg name="X_Distancia" default="40.0"/>
-    <arg name="Y_Distancia" default="20.0"/>
-    <arg name="Z_Distancia" default="0.0"/>
+    <arg name="Z_Inicial" default="2.0"/>
+    <arg name="X_Distancia" default="2.0"/>
+    <arg name="Y_Distancia" default="1.0"/>
+    <arg name="Z_Distancia" default="1.0"/>
     <arg name="verbose" default="false"/>
 
   <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find bebop_simulator)/models"/>
