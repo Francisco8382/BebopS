@@ -1,8 +1,7 @@
-[![BebopS Build Automation Script](https://github.com/gsilano/BebopS/actions/workflows/main.yml/badge.svg)](https://github.com/gsilano/BebopS/actions/workflows/main.yml)
+[![Build Status](https://travis-ci.com/gsilano/BebopS.svg?token=j5Gz4tcDJ28z8njKZCzL&branch=master)](https://travis-ci.com/gsilano/BebopS)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://www.firsttimersonly.com/)
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 
 # BebopS
 
@@ -65,13 +64,6 @@ $ cd ~/catkin_ws
 $ rosdep install --from-paths src -i
 $ catkin build
 ```
-> In case the building process should fail, consider what's detailed in [#43](https://github.com/gsilano/CrazyS/issues/43). In particular, run the instructions reported at the bottom. 
-> ```console
-> $ cd ~/catkin_ws/src/rotors_simulator
-> $ git checkout med18_gazebo9_fix
-> $ cd ~/catkin_ws
-> $ catkin build
-> ```
 
 4. Add sourcing to your `.bashrc` file
 

@@ -1,0 +1,15 @@
+# Position controller parameters
+K1_xy: {K1_xy_i: 2.05, K1_xy_f: 2.2, K1_xy_d: 0}
+K1_z: {K1_z_i: 0.8, K1_z_f: 0.9, K1_z_d: 0.05}
+K1_phi_theta: {K1_phi_theta_i: 0.193, K1_phi_theta_f: 0.2, K1_phi_theta_d: 0}
+K1_psi: {K1_psi_i: 0.0007, K1_psi_f: 0.0015, K1_psi_d: 0}
+K2_xy: {K2_xy_i: 5.45, K2_xy_f: 5.6, K2_xy_d: 0}
+K2_z: {K2_z_i: 10.0, K2_z_f: 11.6, K2_z_d: 0.2}
+K2_phi_theta: {K2_phi_theta_i: 0.64, K2_phi_theta_f: 0.68, K2_phi_theta_d: 0}
+K2_psi: {K2_psi_i: 0.0578, K2_psi_f: 0.06, K2_psi_d: 0}
+K34_xy: {K34_xy_i: 0.00372, K34_xy_f: 0.0038, K34_xy_d: 0}
+K34_z: {K34_z_i: 0.003, K34_z_f: 0.005, K34_z_d: 0}
+K34_phi_theta: {K34_phi_theta_i: 0.000104, K34_phi_theta_f: 0.0002, K34_phi_theta_d: 0}
+K34_psi: {K34_psi_i: 0.000005, K34_psi_f: 0.000005, K34_psi_d: 0}
+sigma: {sigma: 0.8}
+U_xyz: {U_x: 6.3, U_y: 6.3, U_z: 4.6697}

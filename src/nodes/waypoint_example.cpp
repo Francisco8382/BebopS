@@ -107,7 +107,7 @@ int main(int argc, char** argv){
   }
 
   // Wait for t seconds to let the Gazebo GUI show up.
-  double t = 0.5;
+  double t = 6.0;
   ros::Duration(t).sleep();
 
   ROS_INFO("Start publishing waypoints.");

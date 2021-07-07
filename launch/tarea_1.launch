@@ -7,7 +7,7 @@
     <arg name="y" default="0.0" />
     <arg name="z" default="0.0" />
     <arg name="use_sim_time" default="true"/>
-    <arg name="world_name" default="basic"/>
+    <arg name="world_name" default="max_update_rate_0"/>
     <arg name="wind_force" default="0.25"/>
     <arg name="wind_start" default="5.0"/>
     <arg name="wind_duration" default="40.0"/>
@@ -16,22 +16,38 @@
     <arg name="wind_direction_z" default="0.0"/>
     <arg name="csvFilesStoring" default="false"/>
     <arg name="csvFilesStoringTime" default="60.0"/> <!-- seconds -->
-    <arg name="user_account" default="giuseppe"/> <!-- account name of your pc -->
+    <arg name="user_account" default="francisco"/> <!-- account name of your pc -->
     <arg name="waypoint_filter" default="true"/>
     <arg name="EKFActive" default="false"/>
     <arg name="enable_odometry_sensor_with_noise" default="false"/>
     <arg name="disable_odometry_sensor_with_noise" default="true"/>
-    <arg name="enable_ground_truth_sensor" default="false"/>
+    <arg name="enable_ground_truth_sensor" default="true"/>
     <arg name="enable_wind_plugin" default="false"/>
     <arg name="enable_laser1D" default="false"/>
-    <arg name="enable_plots" default="false"/>
+    <arg name="enable_plots" default="true"/>
     <arg name="enable_imu" default="true"/>
 
-    
+    <arg name="Gamma" default="0.1"/>
+    <arg name="TiempoMargen" default="10.0"/>
+    <arg name="path" default="$(env HOME)/CSV/"/>
+    <param name="Subcarpeta" type="str" command="date +'%d-%m-%Y_%Ih%Mm%Ss'"/>
+
+    <arg name="TiempoPosicionInicial" default="20.0"/>
+    <arg name="TiempoTrayectoria" default="40.0"/>
+    <arg name="Dif_Tiempo" default="0.01"/>
+    <arg name="X_Inicial" default="0.0"/>
+    <arg name="Y_Inicial" default="0.0"/>
+    <arg name="Z_Inicial" default="10.0"/>
+    <arg name="X_Distancia" default="10.0"/>
+    <arg name="Y_Distancia" default="5.0"/>
+    <arg name="Z_Distancia" default="5.0"/>
+    <arg name="verbose" default="false"/>
+
   <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find bebop_simulator)/models"/>
   <env name="GAZEBO_RESOURCE_PATH" value="${GAZEBO_RESOURCE_PATH}:$(find bebop_simulator)/models"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find bebop_simulator)/worlds/$(arg world_name).world" />
+    <arg name="gui" default="true"/>
   </include>
 
     <!-- Launch UAV -->
@@ -46,8 +62,6 @@
        <arg name="wind_direction_x" value="$(arg wind_direction_x)"/>
        <arg name="wind_direction_y" value="$(arg wind_direction_y)"/>
        <arg name="wind_direction_z" value="$(arg wind_direction_z)"/>
-       <!-- The disable_odometry_sensor_with_noise will only become true if enable_odometry_sensor_with_noise will is false.
-       In this way, only one odometry sensor will be simulated: with or without noise. -->
        <arg name="enable_odometry_sensor_with_noise" value="$(arg enable_odometry_sensor_with_noise)"/>
        <param name="disable_odometry_sensor_with_noise" value="false" unless="$(arg enable_odometry_sensor_with_noise)" />
        <arg name="disable_odometry_sensor_with_noise" value="$(arg disable_odometry_sensor_with_noise)"/>
@@ -58,7 +72,7 @@
     </include>
 
     <!-- Launch the controller  -->
-    <node name="position_controller_node" pkg="bebop_simulator" type="position_controller_node" output="screen"> 
+    <node name="pos_controller_node" pkg="bebop_simulator" type="pos_controller_node" output="screen"> 
       <rosparam command="load" file="$(find bebop_simulator)/resource/controller_bebop.yaml" />
       <rosparam command="load" file="$(find bebop_simulator)/resource/bebop.yaml" />
       <rosparam command="load" file="$(find bebop_simulator)/resource/EKF_matrix.yaml" />
@@ -69,7 +83,6 @@
       <param name="user_account" value="$(arg user_account)"/>
       <param name="waypoint_filter" value="$(arg waypoint_filter)"/>
       <param name="EKFActive" value="$(arg EKFActive)"/>
-      <!--remap from="/command/motor_speed" to="/gazebo/command/motor_speed" /-->
       <remap from="/command/motor_speed" to="/bebop/command/motors" />
       <remap from="/odometry" to="/bebop/odometry" />
       <remap from="/odometry_gt" to="/bebop/odometry_gt" />
@@ -84,49 +97,64 @@
       <remap from="/angularAndAngularVelocityErrors" to="/bebop/angularAndAngularVelocityErrors" />
     </node>
 
+    <node name="$(anon csv_odometry_1)" pkg="bebop_simulator" type="csv_odometry" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="Topico" type="str" value="/bebop/Odometry"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Nombre" type="str" value="odometry.csv"/>
+    </node>
+
+    <node name="$(anon csv_odometry_2)" pkg="bebop_simulator" type="csv_odometry" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="Topico" type="str" value="/bebop/OdometryGT"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Nombre" type="str" value="odometry_gt.csv"/>
+    </node>
+
+    <node name="$(anon csv_odometry_3)" pkg="bebop_simulator" type="csv_odometry" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="Topico" type="str" value="/bebop/PositionReference"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Nombre" type="str" value="reference.csv"/>
+    </node>
+
+    <node name="$(anon csv_odometry_4)" pkg="bebop_simulator" type="csv_odometry" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="Topico" type="str" value="/bebop/PositionWithGamma"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Nombre" type="str" value="referenceGamma.csv"/>
+    </node>
+
+    <node name="csv_control" pkg="bebop_simulator" type="csv_control" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="Topico" type="str" value="/Control"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Nombre" type="str" value="Control.csv"/>
+    </node>
+
+    <node name="plot" pkg="bebop_simulator" type="plot.py" output="screen">
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="Gamma" type="str" value="$(arg Gamma)"/>
+      <rosparam command="load" file="$(find bebop_simulator)/resource/controller_bebop.yaml" />
+    </node>
+
     <!-- Launch the trajectory generator -->
    <group ns="$(arg name)">
-       <node name="waypoint_example" pkg="bebop_simulator" type="waypoint_example" output="screen" args="$(find bebop_simulator)/resource/waypoints.txt"/>   
+       <node name="waypoint_gen" pkg="bebop_simulator" type="waypoint_gen" output="screen">
+        <param name="TiempoPosicionInicial" type="double" value="$(arg TiempoPosicionInicial)"/>
+        <param name="TiempoTrayectoria" type="double" value="$(arg TiempoTrayectoria)"/>
+        <param name="Dif_Tiempo" type="double" value="$(arg Dif_Tiempo)"/>
+        <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+        <param name="X_Inicial" type="double" value="$(arg X_Inicial)"/>
+        <param name="Y_Inicial" type="double" value="$(arg Y_Inicial)"/>
+        <param name="Z_Inicial" type="double" value="$(arg Z_Inicial)"/>
+        <param name="X_Distancia" type="double" value="$(arg X_Distancia)"/>
+        <param name="Y_Distancia" type="double" value="$(arg Y_Distancia)"/>
+        <param name="Z_Distancia" type="double" value="$(arg Z_Distancia)"/>
+        <param name="Gamma" type="double" value="$(arg Gamma)"/>
+        <param name="verbose" type="bool" value="$(arg verbose)"/>
+       </node>   
     </group>
-
-    <!-- Launch the trajectory plot -->
-   <group ns="$(arg plotName)" if="$(arg enable_plots)">
-    <node name="position_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/odometry/pose/pose/position" output="screen" />
-    <node name="quaternion_to_rpy" pkg="bebop_simulator" type="quaternion_to_rpy" output="screen" >
-       <remap from="/odometry" to="/bebop/odometry" />
-       <remap from="/orientation_rpy" to="/bebop/orientation_rpy" />
-    </node>
-    <node name="orientation_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/orientation_rpy" output="screen" />
-
-    <!-- Launch the reference angles plot -->
-    <node name="reference_angles_uT_PhiR_ThetaR" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/referenceAngles/pose/pose/position" output="screen" />
-    <node name="reference_angles_Ux_Uy_Uterr" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/referenceAngles/twist/twist/linear" output="screen" />
-
-    <!-- Launch the smoothed trajectory plot -->
-    <node name="smoothed_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/smoothedTrajectory/pose/pose/position" output="screen" />
-
-    <!-- Launch the uTerr components plot -->
-    <node name="uTerr_components_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/uTerrComponents/pose/pose/position" output="screen" />
-
-    <!-- Launch the zVelocity components plot -->
-    <node name="zVelocity_components_plot_1" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/zVelocityComponents/pose/pose/position" output="screen" />
-    <node name="zVelocity_components_plot_2" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/zVelocityComponents/twist/twist/linear" output="screen" />
-
-    <!-- Launch the filtered output plot -->
-    <node name="position_plot_ekf" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/filteredOutput/pose/pose/position" output="screen" />
-    <node name="velocity_plot_ekf" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/filteredOutput/twist/twist/linear" output="screen" />
-
-    <!-- Launch the state errors plot -->
-    <node name="state_errors_position_plot_ekf" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/stateErrors/pose/pose/position" output="screen" />
-    <node name="state_errors_velocity_plot_ekf" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/stateErrors/twist/twist/linear" output="screen" />
-    
-    <!-- Launch the position and velocity errors plot -->
-    <node name="position_errors_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/positionAndVelocityErrors/pose/pose/position" output="screen" />
-    <node name="velocity_errors_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/positionAndVelocityErrors/twist/twist/linear" output="screen" />
-
-    <!-- Launch the angular and angular velocities errors plot -->
-    <node name="angular_errors_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/angularAndAngularVelocityErrors/pose/pose/position" output="screen" />
-    <node name="angular_velocity_errors_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg name)/angularAndAngularVelocityErrors/twist/twist/linear" output="screen" />
-   </group>
 
 </launch>

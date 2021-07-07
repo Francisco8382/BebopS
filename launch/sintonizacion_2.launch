@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="name" default="bebop"/>
+    <arg name="plotName" default="bebopPlots"/>
+    <arg name="x" default="0.0" />
+    <arg name="y" default="0.0" />
+    <arg name="z" default="0.0" />
+    <arg name="use_sim_time" default="true"/>
+    <arg name="world_name" default="max_update_rate_0"/>
+    <arg name="wind_force" default="0.25"/>
+    <arg name="wind_start" default="5.0"/>
+    <arg name="wind_duration" default="40.0"/>
+    <arg name="wind_direction_x" default="1.0"/>
+    <arg name="wind_direction_y" default="0.0"/>
+    <arg name="wind_direction_z" default="0.0"/>
+    <arg name="csvFilesStoring" default="false"/>
+    <arg name="csvFilesStoringTime" default="60.0"/> <!-- seconds -->
+    <arg name="user_account" default="francisco"/> <!-- account name of your pc -->
+    <arg name="waypoint_filter" default="true"/>
+    <arg name="EKFActive" default="false"/>
+    <arg name="enable_odometry_sensor_with_noise" default="false"/>
+    <arg name="disable_odometry_sensor_with_noise" default="true"/>
+    <arg name="enable_ground_truth_sensor" default="true"/>
+    <arg name="enable_wind_plugin" default="false"/>
+    <arg name="enable_laser1D" default="false"/>
+    <arg name="enable_plots" default="true"/>
+    <arg name="enable_imu" default="true"/>
+
+    <arg name="Gamma" default="0.1"/>
+    <arg name="TiempoMargen" default="10.0"/>
+    <arg name="path" default="$(env HOME)/CSV/"/>
+
+    <arg name="TiempoPosicionInicial" default="20.0"/>
+    <arg name="TiempoTrayectoria" default="40.0"/>
+    <arg name="Dif_Tiempo" default="0.01"/>
+    <arg name="X_Inicial" default="0.0"/>
+    <arg name="Y_Inicial" default="0.0"/>
+    <arg name="Z_Inicial" default="2.0"/>
+    <arg name="X_Distancia" default="2.0"/>
+    <arg name="Y_Distancia" default="1.0"/>
+    <arg name="Z_Distancia" default="1.0"/>
+    <arg name="verbose" default="false"/>
+
+  <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find bebop_simulator)/models"/>
+  <env name="GAZEBO_RESOURCE_PATH" value="${GAZEBO_RESOURCE_PATH}:$(find bebop_simulator)/models"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find bebop_simulator)/worlds/$(arg world_name).world" />
+    <arg name="gui" default="false"/>
+  </include>
+
+    <!-- Launch UAV -->
+    <include file="$(find bebop_simulator)/launch/spawn_bebop.launch">
+       <arg name="name" value="$(arg name)" />
+       <arg name="x" value="$(arg x)"/>
+       <arg name="y" value="$(arg y)"/>
+       <arg name="z" value="$(arg z)"/>
+       <arg name="wind_force" value="$(arg wind_force)"/>
+       <arg name="wind_start" value="$(arg wind_start)"/>
+       <arg name="wind_duration" value="$(arg wind_duration)"/>
+       <arg name="wind_direction_x" value="$(arg wind_direction_x)"/>
+       <arg name="wind_direction_y" value="$(arg wind_direction_y)"/>
+       <arg name="wind_direction_z" value="$(arg wind_direction_z)"/>
+       <arg name="enable_odometry_sensor_with_noise" value="$(arg enable_odometry_sensor_with_noise)"/>
+       <param name="disable_odometry_sensor_with_noise" value="false" unless="$(arg enable_odometry_sensor_with_noise)" />
+       <arg name="disable_odometry_sensor_with_noise" value="$(arg disable_odometry_sensor_with_noise)"/>
+       <arg name="enable_ground_truth_sensor" value="$(arg enable_ground_truth_sensor)"/>
+       <arg name="enable_wind_plugin" value="$(arg enable_wind_plugin)"/>
+       <arg name="enable_imu" value="$(arg enable_imu)"/>
+       <arg name="enable_laser1D" value="$(arg enable_laser1D)"/>
+    </include>
+
+    <!-- Launch the controller  -->
+    <node name="launcher_2" pkg="bebop_simulator" type="launcher_2" output="screen"> 
+      <rosparam command="load" file="$(find bebop_simulator)/resource/controller_bebop_des_launcher.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/bebop.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/EKF_matrix.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/waypoint_filter.yaml" />
+      <param name="use_sim_time" value="$(arg use_sim_time)" />
+      <param name="csvFilesStoring" value="$(arg csvFilesStoring)"/>
+      <param name="csvFilesStoringTime" value="$(arg csvFilesStoringTime)"/>
+      <param name="user_account" value="$(arg user_account)"/>
+      <param name="waypoint_filter" value="$(arg waypoint_filter)"/>
+      <param name="EKFActive" value="$(arg EKFActive)"/>
+      <param name="Ruta" type="str" value="$(arg path)"/>
+      <param name="TiempoPosicionInicial" type="double" value="$(arg TiempoPosicionInicial)"/>
+      <param name="TiempoTrayectoria" type="double" value="$(arg TiempoTrayectoria)"/>
+      <param name="Dif_Tiempo" type="double" value="$(arg Dif_Tiempo)"/>
+      <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+      <param name="X_Inicial" type="double" value="$(arg X_Inicial)"/>
+      <param name="Y_Inicial" type="double" value="$(arg Y_Inicial)"/>
+      <param name="Z_Inicial" type="double" value="$(arg Z_Inicial)"/>
+      <param name="X_Distancia" type="double" value="$(arg X_Distancia)"/>
+      <param name="Y_Distancia" type="double" value="$(arg Y_Distancia)"/>
+      <param name="Z_Distancia" type="double" value="$(arg Z_Distancia)"/>
+      <param name="Gamma" type="double" value="$(arg Gamma)"/>
+      <param name="verbose" type="bool" value="$(arg verbose)"/>
+    </node>
+
+</launch>

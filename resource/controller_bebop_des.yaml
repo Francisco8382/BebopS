@@ -1,0 +1,14 @@
+# Position controller parameters
+Kp_xy: {Kp_xy: 17.8}
+Kp_z: {Kp_z: 25.5}
+Kp_phi_theta: {Kp_phi_theta: 578.85}
+Kp_psi: {Kp_psi: 23.15}
+Td_xy: {Td_xy: 0.53}
+Td_z: {Td_z: 0.222}
+Td_phi_theta: {Td_phi_theta: 0.109}
+Td_psi: {Td_psi: 0.254}
+Ti_xy: {Ti_xy: 1.644}
+Ti_z: {Ti_z: 1.98}
+Ti_phi_theta: {Ti_phi_theta: 620.0}
+Ti_psi: {Ti_psi: 1.44}
+U_xyz: {U_x: 6.295, U_y: 6.295, U_z: 4.6697}

@@ -1,0 +1,20 @@
+# Position controller parameters
+K1_xy: {K1_xy: 2.05}
+K1_z: {K1_z: 0.8}
+K1_phi_theta: {K1_phi_theta: 0.193}
+K1_psi: {K1_psi: 0.009172}
+K2_xy: {K2_xy: 5.45}
+K2_z: {K2_z: 10.0}
+K2_phi_theta: {K2_phi_theta: 0.64}
+K2_psi: {K2_psi: 0.036114}
+K3_xy: {K3_xy: 0.00372}
+K3_z: {K3_z: 0.003}
+K3_phi_theta: {K3_phi_theta: 0.00174}
+K3_psi: {K3_psi: 0.000005}
+K4_xy: {K4_xy: 0.00372}
+K4_z: {K4_z: 0.003}
+K4_phi_theta: {K4_phi_theta: 0.00174}
+K4_psi: {K4_psi: 0.000005}
+sigma: {sigma: 0.8}
+U_xyz: {U_x: 6.295, U_y: 6.295, U_z: 4.6697}
+
