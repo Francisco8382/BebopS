@@ -13,7 +13,8 @@ Este proyecto es una bifurcación de [BebopS](https://github.com/gsilano/BebopS)
 * Añadido lanzador para la sintonización de ganancias del controlador PD
 * Añadido lanzador para la sintonización de ganancias del controlador PID
 * Añadido lanzador para la sintonización de ganancias del controlador CITC
-* Los siguientes archivos fueron añadidos:
+
+Los siguientes archivos fueron añadidos:
   * /include/bebop\_simulator/pos\_controller.h
   * /msg/AttitudeController.msg
   * /msg/Control.msg
